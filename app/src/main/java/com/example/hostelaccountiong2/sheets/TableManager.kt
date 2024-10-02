@@ -45,7 +45,7 @@ object TableManager : AbstractTableManager {
         val rfc1123Format = DateTimeFormatter.RFC_1123_DATE_TIME
         val dateValue = date.format(rfc1123Format)
         println(dateValue)
-        val stringToSign = "PUT\n\n$Secret.contentType\n$dateValue\n/$Secret.bucketName/$filename"
+        val stringToSign = "PUT\n\n${Secret.contentType}\n$dateValue\n/$Secret.bucketName/$filename"
         val signature = sign(stringToSign, Secret.awsSecretKey)
 
         runBlocking {
@@ -129,6 +129,15 @@ object TableManager : AbstractTableManager {
 
     override fun Todo.edit(name: String, description: String, date: String, done: Boolean): TodoList {
         val result = (getTodoList() - this + Todo(name, description, date, done)).fix()
+
+        setFile(JsonList(JsonTodo).run { result.toJson() }, "shopping.json")
+
+        return result
+    }
+
+
+    override fun removeTodo(todo: Todo): TodoList {
+        val result = getTodoList() - todo
 
         setFile(JsonList(JsonTodo).run { result.toJson() }, "shopping.json")
 

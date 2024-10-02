@@ -23,6 +23,8 @@ interface AbstractTableManager {
 
     fun addTodo(todo: Todo): TodoList
 
+    fun removeTodo(todo: Todo): TodoList
+
     fun Todo.edit(
         name: String = this.name,
         description: String = this.description,
